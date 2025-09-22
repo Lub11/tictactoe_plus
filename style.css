@@ -81,16 +81,36 @@ h1 {
     gap: 2px;
     padding: 5px;
     min-height: 120px;
+    position: relative;
+    overflow: hidden;
 }
 
-.big-cell.won-by-X {
-    background: #fed7d7;
-    border-color: #e53e3e;
+/* Fully colored and transparent captured big cells */
+.big-cell.won-by-X::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(229, 62, 62, 0.3); /* Red with transparency */
+    z-index: 1;
 }
 
-.big-cell.won-by-O {
-    background: #c6f6d5;
-    border-color: #38a169;
+.big-cell.won-by-O::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(56, 161, 105, 0.3); /* Green with transparency */
+    z-index: 1;
+}
+
+.big-cell.won-by-X .small-cell,
+.big-cell.won-by-O .small-cell {
+    opacity: 0.7; /* Make small cells slightly transparent when big cell is won */
 }
 
 .big-cell.active {
@@ -110,6 +130,8 @@ h1 {
     cursor: pointer;
     transition: all 0.2s;
     min-height: 35px;
+    position: relative;
+    z-index: 2; /* Ensure small cells are above the background color */
 }
 
 .small-cell:hover {
@@ -124,6 +146,20 @@ h1 {
 .small-cell.O {
     color: #38a169;
     background: #c6f6d5;
+}
+
+/* Highlight for the next move cell */
+.small-cell.next-move {
+    background: #ffeb3b !important; /* Yellow highlight */
+    border: 2px solid #ffc107 !important;
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
 
 .small-cell:disabled {

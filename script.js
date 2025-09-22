@@ -2,6 +2,7 @@ class UltimateTicTacToe {
     constructor() {
         this.currentPlayer = 'X';
         this.nextBoard = null; // null means any board for first move
+        this.nextSmallCell = null; // Track the specific small cell for next move
         this.gameOver = false;
         this.winner = null;
         
@@ -63,8 +64,14 @@ class UltimateTicTacToe {
             }
         }
 
-        // Determine next board
-        this.nextBoard = this.bigBoardWinners[smallIndex] === null ? smallIndex : null;
+        // Determine next board and specific small cell
+        if (this.bigBoardWinners[smallIndex] === null) {
+            this.nextBoard = smallIndex;
+            this.nextSmallCell = null; // Player can choose any cell in the next board
+        } else {
+            this.nextBoard = null; // Player can choose any available board
+            this.nextSmallCell = null;
+        }
 
         // Switch player if game is not over
         if (!this.gameOver) {
@@ -136,13 +143,25 @@ class UltimateTicTacToe {
                             smallCell.disabled = true;
                         } else {
                             smallCell.textContent = '';
+                            
+                            // Determine if this cell should be highlighted as next move
+                            const shouldHighlight = this.nextBoard === bigIndex && 
+                                                  this.nextSmallCell === null &&
+                                                  this.bigBoardWinners[bigIndex] === null;
+                            
+                            if (shouldHighlight) {
+                                smallCell.classList.add('next-move');
+                            }
+                            
                             smallCell.disabled = this.gameOver || 
                                 (this.nextBoard !== null && this.nextBoard !== bigIndex) ||
                                 this.bigBoardWinners[bigIndex] !== null;
                             
-                            smallCell.addEventListener('click', () => {
-                                this.makeMove(bigIndex, smallIndex);
-                            });
+                            if (!smallCell.disabled) {
+                                smallCell.addEventListener('click', () => {
+                                    this.makeMove(bigIndex, smallIndex);
+                                });
+                            }
                         }
                         
                         bigCell.appendChild(smallCell);
@@ -171,13 +190,14 @@ class UltimateTicTacToe {
         } else {
             const row = Math.floor(this.nextBoard / 3);
             const col = this.nextBoard % 3;
-            nextBoardElement.textContent = `Next move: Board (${row + 1}, ${col + 1})`;
+            nextBoardElement.textContent = `Next move: Board (${row + 1}, ${col + 1}) - Choose any cell`;
         }
     }
 
     restartGame() {
         this.currentPlayer = 'X';
         this.nextBoard = null;
+        this.nextSmallCell = null;
         this.gameOver = false;
         this.winner = null;
         this.boards = Array(9).fill().map(() => Array(9).fill(null));
