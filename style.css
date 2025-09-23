@@ -93,7 +93,7 @@ h1 {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(229, 62, 62, 0.3); /* Red with transparency */
+    background: rgba(229, 62, 62, 0.7); /* Red with transparency */
     z-index: 1;
 }
 
